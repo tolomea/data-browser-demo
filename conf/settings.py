@@ -129,3 +129,6 @@ sentry_sdk.init(
     dsn="https://f89328b014ca4f328886f6823ba9a804@o390136.ingest.sentry.io/5231099",
     integrations=[DjangoIntegration()],
 )
+DATA_BROWSER_FE_DSN = (
+    "https://af64f22b81994a0e93b82a32add8cb2b@o390136.ingest.sentry.io/5231151"
+)
