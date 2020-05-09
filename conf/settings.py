@@ -25,7 +25,7 @@ SECRET_KEY = "frq_wr1li=c1olr909%wm!+bokp!9@sz$!!(3u11%u!ixc)bkz"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition

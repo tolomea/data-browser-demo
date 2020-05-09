@@ -1,4 +1,5 @@
 Django
-whitenoise
 django-data-browser
 factory_boy
+gunicorn
+whitenoise

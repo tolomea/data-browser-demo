@@ -8,4 +8,3 @@ python manage.py migrate
 # python manage.py fixtures
 # todo limited perm user in fixtures
 python manage.py createsuperuser --username admin@example.com --email admin@example.com  --no-input
-python manage.py runserver
