@@ -6,5 +6,5 @@ class AuthenticationMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        request.user = User.objects.get()
+        request.user = User.objects.get(is_staff=True)
         return self.get_response(request)

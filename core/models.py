@@ -16,6 +16,9 @@ class Product(models.Model):
     price = models.DecimalField(blank=False, decimal_places=2, max_digits=10)
     onsale = models.BooleanField()
 
+    def __str__(self):
+        return self.name
+
 
 class Order(models.Model):
     submitted_time = models.DateTimeField()
@@ -23,9 +26,8 @@ class Order(models.Model):
         User, on_delete=models.CASCADE, null=False, blank=False, related_name="orders"
     )
 
-    @property
-    def total(self):
-        return sum(item.total for item in self.order_items.all())
+    def __str__(self):
+        return f"{self.buyer}@{self.submitted_time.date()}"
 
 
 class OrderItem(models.Model):
@@ -49,3 +51,6 @@ class OrderItem(models.Model):
     @property
     def total(self):
         return self.price * self.quantity
+
+    def __str__(self):
+        return f"{self.product.name} for {self.order}"

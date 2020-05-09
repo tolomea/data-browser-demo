@@ -16,13 +16,12 @@ class OrderItemInline(admin.TabularInline):
 
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
-    fields = ["submitted_time", "buyer", "total"]
-    readonly_fields = ["total"]
+    fields = ["submitted_time", "buyer"]
     inlines = [OrderItemInline]
 
 
 @admin.register(models.User)
 class UserAdmin(AbstractUserAdmin):
     fieldsets = list(AbstractUserAdmin.fieldsets) + [
-        ("History", {"fields": ["last_purchase"]})
+        ("History", {"fields": ["last_order"]})
     ]

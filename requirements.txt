@@ -1,5 +1,6 @@
 Django
 django-data-browser
-factory_boy
+faker
+faker-microservice
 gunicorn
 whitenoise
