@@ -1,0 +1,4 @@
+Django
+whitenoise
+django-data-browser
+factory_boy
