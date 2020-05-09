@@ -118,3 +118,12 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+
+
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+sentry_sdk.init(
+    dsn="https://f89328b014ca4f328886f6823ba9a804@o390136.ingest.sentry.io/5231099",
+    integrations=[DjangoIntegration()],
+)

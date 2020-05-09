@@ -3,4 +3,5 @@ django-data-browser
 faker
 faker-microservice
 gunicorn
+sentry-sdk==0.14.3
 whitenoise

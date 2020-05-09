@@ -17,7 +17,13 @@ from django.contrib import admin
 from django.urls import path, include
 import data_browser
 
+
+def trigger_error(request):
+    division_by_zero = 1 / 0
+
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("data-browser/", include("data_browser.urls")),
+    path("sentry-debug/", trigger_error),
 ]
