@@ -59,10 +59,11 @@ class Command(BaseCommand):
             name="People who brought databases",
             description=(
                 "Everyone who brought some kind of database and what kind it was. "
+                "Along with how many they brought and the total cost. "
                 "We're using random data so it's possible there aren't any."
             ),
             model_name="core.OrderItem",
-            fields="product__name,product__user__first_name,product__user__last_name",
+            fields="product__name,product__user__first_name,product__user__last_name,quantity__sum,price__sum-0",
             query="product__name__contains=database",
         )
 
