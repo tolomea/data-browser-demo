@@ -132,3 +132,6 @@ sentry_sdk.init(
 DATA_BROWSER_FE_DSN = (
     "https://af64f22b81994a0e93b82a32add8cb2b@o390136.ingest.sentry.io/5231151"
 )
+
+
+DATA_BROWSER_ALLOW_PUBLIC = True
