@@ -7,6 +7,7 @@ from faker import Faker
 import faker_microservice
 import random
 from django.utils import timezone
+from datetime import datetime
 
 
 NUM_USERS = 50
@@ -16,7 +17,7 @@ USER_HAS_ORDER = 0.75
 ORDER_HAS_EXTRA_ITEMS = 0.5
 
 
-def price():
+def get_price():
     return random.random() * 123 + 1
 
 
@@ -66,6 +67,14 @@ class Command(BaseCommand):
             fields="product__name,product__user__first_name,product__user__last_name,quantity__sum,price__sum-0",
             query="product__name__contains=database",
         )
+        View.objects.create(
+            owner=user,
+            name="Order statistics",
+            description="Order count and total value pivoted by year and month.",
+            model_name="core.OrderItem",
+            fields="&order__submitted_time__year+0,order__submitted_time__month+1,total__sum,order__id__count",
+            query="",
+        )
 
     def create_users_and_products(self):
         self.stdout.write(self.style.SUCCESS("creating users and products"))
@@ -88,7 +97,7 @@ class Command(BaseCommand):
                     models.Product.objects.create(
                         user=user,
                         name=self.fake.microservice(),
-                        price=price(),
+                        price=get_price(),
                         onsale=rand(PRODUCT_ONSALE),
                     )
                 )
@@ -99,16 +108,22 @@ class Command(BaseCommand):
 
         def make_order_item():
             product = random.choice(products)
+            price = get_price() if rand(0.1) else product.price
+            quantity = random.randrange(1, 20)
             models.OrderItem.objects.create(
                 order=order,
                 product=product,
-                price=price() if rand(0.1) else product.price,
-                quantity=random.randrange(1, 20),
+                price=price,
+                quantity=quantity,
+                total=price * quantity,
             )
 
         for user in users:
             while rand(USER_HAS_ORDER):
-                submitted_time = timezone.make_aware(self.fake.date_time_this_decade())
+                submitted_time = timezone.make_aware(
+                    # todo should be "-3y"
+                    self.fake.date_time_between(datetime(2018, 1, 1, 0, 0, 0))
+                )
                 order = models.Order.objects.create(
                     buyer=user, submitted_time=submitted_time
                 )

@@ -11,7 +11,6 @@ class ProductAdmin(admin.ModelAdmin):
 class OrderItemInline(admin.TabularInline):
     model = models.OrderItem
     fields = ["product", "price", "quantity", "total"]
-    readonly_fields = ["total"]
 
 
 @admin.register(models.Order)
