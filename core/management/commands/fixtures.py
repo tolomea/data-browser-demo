@@ -1,5 +1,4 @@
 import random
-from datetime import datetime
 
 import faker_microservice
 from core import models
@@ -120,10 +119,7 @@ class Command(BaseCommand):
 
         for user in users:
             while rand(USER_HAS_ORDER):
-                submitted_time = timezone.make_aware(
-                    # todo should be "-3y"
-                    self.fake.date_time_between(datetime(2018, 1, 1, 0, 0, 0))
-                )
+                submitted_time = timezone.make_aware(self.fake.date_time_between("-3y"))
                 order = models.Order.objects.create(
                     buyer=user, submitted_time=submitted_time
                 )
