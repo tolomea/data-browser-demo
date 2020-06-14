@@ -1,14 +1,14 @@
-from django.core.management.base import BaseCommand, CommandError
-from django.contrib.auth.models import Permission
-from core import models
-from data_browser.models import View
-from django.contrib.contenttypes.models import ContentType
-from faker import Faker
-import faker_microservice
 import random
-from django.utils import timezone
 from datetime import datetime
 
+import faker_microservice
+from core import models
+from data_browser.models import View
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
+from django.core.management.base import BaseCommand
+from django.utils import timezone
+from faker import Faker
 
 NUM_USERS = 50
 PRODUCT_ONSALE = 0.9
