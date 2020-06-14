@@ -125,13 +125,10 @@ STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
 
-sentry_sdk.init(
-    dsn="https://f89328b014ca4f328886f6823ba9a804@o390136.ingest.sentry.io/5231099",
-    integrations=[DjangoIntegration()],
-)
-DATA_BROWSER_FE_DSN = (
-    "https://af64f22b81994a0e93b82a32add8cb2b@o390136.ingest.sentry.io/5231151"
-)
+if os.environ.get("DATA_BROWSER_BE_DSN"):
+    sentry_sdk.init(
+        dsn=os.environ.get("DATA_BROWSER_BE_DSN"), integrations=[DjangoIntegration()]
+    )
 
-
+DATA_BROWSER_FE_DSN = os.environ.get("DATA_BROWSER_FE_DSN", None)
 DATA_BROWSER_ALLOW_PUBLIC = True
