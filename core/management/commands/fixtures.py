@@ -4,7 +4,8 @@ import faker_microservice
 from core import models
 from data_browser.models import View
 from django.contrib.auth.models import Permission
-from django.contrib.contenttypes.models import ContentType
+
+# from django.contrib.contenttypes.models import ContentType
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 from faker import Faker
@@ -40,9 +41,10 @@ class Command(BaseCommand):
 
         self.stdout.write(self.style.SUCCESS("adding permissions"))
         all_can_view_perms = Permission.objects.filter(codename__startswith="view_")
-        view_content_type = ContentType.objects.get_for_model(View)
-        all_ddb_view_perms = Permission.objects.filter(content_type=view_content_type)
-        admin.user_permissions.set(list(all_can_view_perms) + list(all_ddb_view_perms))
+        # view_content_type = ContentType.objects.get_for_model(View)
+        # all_ddb_view_perms = Permission.objects.filter(content_type=view_content_type)
+        admin.user_permissions.set(list(all_can_view_perms))
+        # + list(all_ddb_view_perms))
         return admin
 
     def create_views(self, user):
