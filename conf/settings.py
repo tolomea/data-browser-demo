@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 
+import data_browser
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
@@ -127,8 +128,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
 if os.environ.get("DATA_BROWSER_BE_DSN"):
     sentry_sdk.init(
-        dsn=os.environ.get("DATA_BROWSER_BE_DSN"), integrations=[DjangoIntegration()]
+        dsn=os.environ.get("DATA_BROWSER_BE_DSN"),
+        integrations=[DjangoIntegration()],
+        release=data_browser.version,
     )
+
 
 DATA_BROWSER_FE_DSN = os.environ.get("DATA_BROWSER_FE_DSN", None)
 DATA_BROWSER_ALLOW_PUBLIC = True

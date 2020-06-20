@@ -1,5 +1,5 @@
 Django
-django-data-browser
+django-data-browser>=2.0
 faker
 faker-microservice
 gunicorn
