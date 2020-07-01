@@ -5,3 +5,4 @@ faker-microservice
 gunicorn
 sentry-sdk==0.14.3
 whitenoise
+django_extensions

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_extensions",
     "data_browser",
     "core",
 ]
@@ -136,3 +137,5 @@ if os.environ.get("DATA_BROWSER_BE_DSN"):
 
 DATA_BROWSER_FE_DSN = os.environ.get("DATA_BROWSER_FE_DSN", None)
 DATA_BROWSER_ALLOW_PUBLIC = True
+DATA_BROWSER_DEV = False
+DEBUG = False
