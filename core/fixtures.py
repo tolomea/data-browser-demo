@@ -1,11 +1,12 @@
 import random
 
 import faker_microservice
-from core import models
 from data_browser.models import View
 from django.contrib.auth.models import Group, Permission
 from django.utils import timezone
 from faker import Faker
+
+from core import models
 
 
 def get_price():

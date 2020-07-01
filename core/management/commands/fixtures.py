@@ -1,5 +1,6 @@
-from core import fixtures
 from django.core.management.base import BaseCommand
+
+from core import fixtures
 
 
 class Command(BaseCommand):
