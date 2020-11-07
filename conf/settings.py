@@ -12,10 +12,6 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 
-import data_browser
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -44,7 +40,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_extensions",
-    "data_browser",
     "core",
 ]
 
@@ -127,15 +122,4 @@ STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
 
-if os.environ.get("DATA_BROWSER_BE_DSN"):
-    sentry_sdk.init(
-        dsn=os.environ.get("DATA_BROWSER_BE_DSN"),
-        integrations=[DjangoIntegration()],
-        release=data_browser.version,
-    )
-
-
-DATA_BROWSER_FE_DSN = os.environ.get("DATA_BROWSER_FE_DSN", None)
-DATA_BROWSER_ALLOW_PUBLIC = True
-DATA_BROWSER_DEV = False
 DEBUG = False

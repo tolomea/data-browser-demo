@@ -1,8 +1,6 @@
 import random
 
 import faker_microservice
-from data_browser.models import View
-from django.contrib.auth.models import Group, Permission
 from django.utils import timezone
 from faker import Faker
 
@@ -28,50 +26,8 @@ def get_or_create_admin_user(username):
             last_name=fake.last_name(),
             is_staff=True,
             is_active=True,
+            is_superuser=True,
         ),
-    )
-
-
-def create_perm_group():
-    all_core_view_perms = Permission.objects.filter(
-        codename__startswith="view_", content_type__app_label="core"
-    )
-    make_public_perm = Permission.objects.get(codename="make_view_public")
-    group = Group.objects.create()
-    group.permissions.set(list(all_core_view_perms) + [make_public_perm])
-
-
-def create_views(user):
-    View.objects.create(
-        owner=user,
-        name="All Products",
-        description="All Products currently on sale with prices and sellers, ordered by price.",
-        model_name="core.Product",
-        fields="id,name,price-0,user__first_name,user__last_name,user__email",
-        query="onsale__equals=true",
-        public=True,
-    )
-    View.objects.create(
-        owner=user,
-        name="People who brought databases",
-        description=(
-            "Everyone who brought some kind of database and what kind it was. "
-            "Along with how many they brought and the total cost. "
-            "We're using random data so it's possible there aren't any."
-        ),
-        model_name="core.OrderItem",
-        fields="product__name,product__user__first_name,product__user__last_name,quantity__sum,price__sum-0",
-        query="product__name__contains=database",
-        public=True,
-    )
-    View.objects.create(
-        owner=user,
-        name="Order statistics",
-        description="Order count and total value pivoted by year and month.",
-        model_name="core.OrderItem",
-        fields="&order__submitted_time__year+0,order__submitted_time__month+1,total__sum,order__id__count",
-        query="",
-        public=True,
     )
 
 
