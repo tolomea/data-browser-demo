@@ -9,7 +9,7 @@ from core import models
 
 
 def get_price():
-    return random.random() * 123 + 1
+    return round(random.random() * 123 + 1, 2)
 
 
 def rand(probability):
@@ -78,11 +78,7 @@ def create_orders(users, products, prob_user_has_order, prob_order_has_extra_ite
         price = get_price() if rand(0.1) else product.price
         quantity = random.randrange(1, 20)
         models.OrderItem.objects.create(
-            order=order,
-            product=product,
-            price=price,
-            quantity=quantity,
-            total=price * quantity,
+            order=order, product=product, price=price, quantity=quantity,
         )
 
     for user in users:
