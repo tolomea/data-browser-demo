@@ -1,4 +1,5 @@
 import random
+from itertools import chain
 
 import faker_microservice
 from django.utils import timezone
@@ -34,16 +35,24 @@ def get_or_create_admin_user(username):
 def create_users_and_products(num_users, prob_user_has_product, prob_product_onsale):
     fake = Faker()
     fake.add_provider(faker_microservice.Provider)
+    country_choices = list(
+        chain.from_iterable(
+            [key] * len(value)
+            for key, value in models.User._meta.get_field("country").choices
+        )
+    )
 
     users = []
     products = []
     for i in range(num_users):
         first_name = fake.first_name()
+        country = random.choice(country_choices)
         user = models.User.objects.create(
             email=fake.email(),
             username=f"{first_name}{i:02}",
             first_name=first_name,
             last_name=fake.last_name(),
+            country=country,
             is_staff=False,
             is_active=True,
         )

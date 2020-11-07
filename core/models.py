@@ -6,6 +6,17 @@ class User(AbstractUser):
     last_order = models.ForeignKey(
         "Order", on_delete=models.CASCADE, null=True, blank=True, related_name="+"
     )
+    country = models.CharField(
+        max_length=2,
+        choices=[
+            ("DE", "Germany"),
+            ("ES", "Spain"),
+            ("FR", "France"),
+            ("GB", "United Kingdom"),
+            ("GR", "Greece"),
+            ("IT", "Italy"),
+        ],
+    )
 
 
 class Product(models.Model):
