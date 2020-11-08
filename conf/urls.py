@@ -18,4 +18,5 @@ from django.urls import include, path  # noqa
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("data-browser/", include("data_browser.urls")),
 ]
