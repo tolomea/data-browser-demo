@@ -1,3 +1,4 @@
+from data_browser.helpers import AdminMixin, annotation, attributes
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as AbstractUserAdmin
 from django.db.models import F, FloatField, Sum
@@ -7,37 +8,31 @@ from . import models
 
 
 @admin.register(models.Product)
-class ProductAdmin(admin.ModelAdmin):
+class ProductAdmin(AdminMixin, admin.ModelAdmin):
     fields = ["user", "name", "price", "onsale"]
 
 
-class OrderItemInline(admin.TabularInline):
+class OrderItemInline(AdminMixin, admin.TabularInline):
     model = models.OrderItem
     fields = ["product", "price", "quantity", "total"]
-    readonly_fields = ["total"]
     extra = 0
 
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
+    @annotation
+    def total(self, request, qs):
         return qs.annotate(
             total=Cast(F("price") * F("quantity"), output_field=FloatField())
         )
 
-    def total(self, obj):
-        return obj.total
-
-    total.admin_order_field = "total"
-
 
 @admin.register(models.Order)
-class OrderAdmin(admin.ModelAdmin):
+class OrderAdmin(AdminMixin, admin.ModelAdmin):
     list_display = ["submitted_time", "buyer", "total"]
     fields = ["submitted_time", "buyer", "total"]
     inlines = [OrderItemInline]
-    readonly_fields = ["total"]
 
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
+    @annotation
+    @attributes(ddb_hide=True)
+    def total(self, request, qs):
         return qs.annotate(
             total=Sum(
                 F("order_items__price") * F("order_items__quantity"),
@@ -45,14 +40,9 @@ class OrderAdmin(admin.ModelAdmin):
             )
         )
 
-    def total(self, obj):
-        return obj.total
-
-    total.admin_order_field = "total"
-
 
 @admin.register(models.User)
-class UserAdmin(AbstractUserAdmin):
+class UserAdmin(AdminMixin, AbstractUserAdmin):
     fieldsets = list(AbstractUserAdmin.fieldsets) + [
         (None, {"fields": ["last_order", "country"]})
     ]
