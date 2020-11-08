@@ -54,5 +54,5 @@ class OrderAdmin(admin.ModelAdmin):
 @admin.register(models.User)
 class UserAdmin(AbstractUserAdmin):
     fieldsets = list(AbstractUserAdmin.fieldsets) + [
-        ("History", {"fields": ["last_order"]})
+        (None, {"fields": ["last_order", "country"]})
     ]
