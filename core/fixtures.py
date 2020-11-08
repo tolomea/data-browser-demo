@@ -70,7 +70,9 @@ def create_users_and_products(num_users, prob_user_has_product, prob_product_ons
     return users, products
 
 
-def create_orders(user, products, prob_user_has_order, prob_order_has_extra_items):
+def create_orders(
+    user, products, prob_user_has_order, prob_order_has_extra_items, min_orders=0
+):
     fake = Faker()
 
     def make_order_item():
@@ -81,11 +83,13 @@ def create_orders(user, products, prob_user_has_order, prob_order_has_extra_item
             order=order, product=product, price=price, quantity=quantity,
         )
 
-    while rand(prob_user_has_order):
+    orders = []
+    while rand(prob_user_has_order) or len(orders) <= min_orders:
         submitted_time = timezone.make_aware(fake.date_time_between("-3y"))
         order = models.Order.objects.create(buyer=user, submitted_time=submitted_time)
+        orders.append(order)
         user.last_order = order
-        user.save()
         make_order_item()
         while rand(prob_order_has_extra_items):
             make_order_item()
+    user.save()
