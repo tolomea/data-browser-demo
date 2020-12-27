@@ -37,6 +37,8 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
+    "core",
+    "data_browser",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -44,8 +46,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_extensions",
-    "data_browser",
-    "core",
 ]
 
 MIDDLEWARE = [
@@ -138,4 +138,3 @@ if os.environ.get("DATA_BROWSER_BE_DSN"):
 DATA_BROWSER_FE_DSN = os.environ.get("DATA_BROWSER_FE_DSN", None)
 DATA_BROWSER_ALLOW_PUBLIC = True
 DATA_BROWSER_DEV = False
-DEBUG = False

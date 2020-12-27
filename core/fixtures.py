@@ -113,7 +113,6 @@ def create_orders(users, products, prob_user_has_order, prob_order_has_extra_ite
             product=product,
             price=price,
             quantity=quantity,
-            total=price * quantity,
         )
 
     for user in users:

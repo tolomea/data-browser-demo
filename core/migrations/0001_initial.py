@@ -182,7 +182,6 @@ class Migration(migrations.Migration):
                 ),
                 ("price", models.DecimalField(decimal_places=2, max_digits=10)),
                 ("quantity", models.IntegerField()),
-                ("total", models.DecimalField(decimal_places=2, max_digits=10)),
                 (
                     "order",
                     models.ForeignKey(
