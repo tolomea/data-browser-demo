@@ -8,6 +8,9 @@ from faker import Faker
 
 from core import models
 
+fake = Faker()
+fake.add_provider(faker_microservice.Provider)
+
 
 def get_price():
     return random.random() * 123 + 1
@@ -18,17 +21,15 @@ def rand(probability):
 
 
 def get_or_create_admin_user(username):
-    fake = Faker()
-
     return models.User.objects.get_or_create(
         username=username,
-        defaults=dict(
-            email="example@example.org",
-            first_name=fake.first_name(),
-            last_name=fake.last_name(),
-            is_staff=True,
-            is_active=True,
-        ),
+        defaults={
+            "email": "example@example.org",
+            "first_name": fake.first_name(),
+            "last_name": fake.last_name(),
+            "is_staff": True,
+            "is_active": True,
+        },
     )
 
 
@@ -76,9 +77,6 @@ def create_views(user):
 
 
 def create_users_and_products(num_users, prob_user_has_product, prob_product_onsale):
-    fake = Faker()
-    fake.add_provider(faker_microservice.Provider)
-
     users = []
     products = []
     for i in range(num_users):
@@ -106,8 +104,6 @@ def create_users_and_products(num_users, prob_user_has_product, prob_product_ons
 
 
 def create_orders(users, products, prob_user_has_order, prob_order_has_extra_items):
-    fake = Faker()
-
     def make_order_item():
         product = random.choice(products)
         price = get_price() if rand(0.1) else product.price
