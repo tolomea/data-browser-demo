@@ -1,8 +1,8 @@
 Django
-django-data-browser>=2.0
+django-data-browser>=4.0
 faker
 faker-microservice
 gunicorn
-sentry-sdk==1.14.0
+sentry-sdk
 whitenoise
 django_extensions
