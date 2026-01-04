@@ -1,9 +1,59 @@
 import hashlib
+import time
 
 from django.contrib.auth.models import Group
+from django.core.cache import cache
 from django.http import HttpResponse
 
 from . import fixtures
+
+
+class RateLimitMiddleware:
+    """Rate limit requests by /16 network block."""
+
+    REQUESTS_PER_MINUTE = 20
+    EXCLUDED_PATHS = ["/static/", "/robots.txt"]
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        # Skip rate limiting for excluded paths
+        for excluded_path in self.EXCLUDED_PATHS:
+            if request.path.startswith(excluded_path):
+                return self.get_response(request)
+
+        # Get /16 network from IP
+        ip = request.META.get("HTTP_X_FORWARDED_FOR", "").split(",")[0].strip()
+        if not ip:
+            ip = request.META.get("REMOTE_ADDR", "")
+
+        # Extract /16 network (first two octets)
+        try:
+            octets = ip.split(".")
+            network = f"{octets[0]}.{octets[1]}"
+        except (IndexError, AttributeError):
+            # Invalid IP, allow request
+            return self.get_response(request)
+
+        # Check rate limit using cache
+        cache_key = f"ratelimit:{network}"
+        current_minute = int(time.time() / 60)
+        cache_key_with_minute = f"{cache_key}:{current_minute}"
+
+        request_count = cache.get(cache_key_with_minute, 0)
+
+        if request_count >= self.REQUESTS_PER_MINUTE:
+            return HttpResponse(
+                f"Rate limit exceeded for network {network}.0.0/16. "
+                f"Limit: {self.REQUESTS_PER_MINUTE} requests per minute.",
+                status=429,
+            )
+
+        # Increment counter
+        cache.set(cache_key_with_minute, request_count + 1, 60)
+
+        return self.get_response(request)
 
 
 class BlockBotsMiddleware:
