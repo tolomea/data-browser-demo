@@ -13,7 +13,9 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
+from django.http import HttpResponse
 from django.urls import include, path
 
 
@@ -21,8 +23,16 @@ def trigger_error(request):
     division_by_zero = 1 / 0  # noqa F841
 
 
+def robots_txt(request):
+    content = """User-agent: *
+Disallow: /
+"""
+    return HttpResponse(content, content_type="text/plain")
+
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("data-browser/", include("data_browser.urls")),
     path("sentry-debug/", trigger_error),
+    path("robots.txt", robots_txt),
 ]
