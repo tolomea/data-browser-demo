@@ -113,22 +113,24 @@ class AuthenticationMiddleware:
             request.META.get("HTTP_X_FORWARDED_FOR", "").encode("utf-8")
         ).hexdigest()
 
-        # Honeypot: Block bots that go straight to /admin/ without visiting first
-        if request.path.startswith("/admin/"):
-            try:
-                # Try to get existing user - don't create new ones for /admin/
-                user = fixtures.models.User.objects.get(username=username)
-            except fixtures.models.User.DoesNotExist:
-                # New user going straight to /admin/ = bot
-                return HttpResponse(
-                    "Access denied. Please visit the data browser first.", status=403
-                )
-        else:
-            # Normal path: create user if needed
+        if request.path.startswith("/data-browser/"):
+            # Data browser: get_or_create user for legitimate demo users
             user, created = fixtures.get_or_create_admin_user(username)
             if created:
                 user.groups.set(Group.objects.all())
                 fixtures.create_views(user)
+            request.user = user
+        elif request.path.startswith("/admin/"):
+            # Admin honeypot: block new users, allow existing users
+            try:
+                user = fixtures.models.User.objects.get(username=username)
+                request.user = user
+            except fixtures.models.User.DoesNotExist:
+                return HttpResponse(
+                    "Access denied. Please visit the data browser first.", status=403
+                )
+        else:
+            # Other paths (static, robots.txt, etc.): no user needed
+            pass
 
-        request.user = user
         return self.get_response(request)
