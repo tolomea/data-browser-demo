@@ -94,6 +94,10 @@ class BlockBotsMiddleware:
 
         user_agent = request.META.get("HTTP_USER_AGENT", "").lower()
 
+        # Allow UptimeRobot monitoring
+        if "uptimerobot" in user_agent:
+            return self.get_response(request)
+
         # Block known bot user agents
         for bot_pattern in self.BOT_USER_AGENTS:
             if bot_pattern in user_agent:
