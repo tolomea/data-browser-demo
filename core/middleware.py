@@ -112,9 +112,23 @@ class AuthenticationMiddleware:
         username = hashlib.md5(
             request.META.get("HTTP_X_FORWARDED_FOR", "").encode("utf-8")
         ).hexdigest()
-        user, created = fixtures.get_or_create_admin_user(username)
-        if created:
-            user.groups.set(Group.objects.all())
-            fixtures.create_views(user)
+
+        # Honeypot: Block bots that go straight to /admin/ without visiting first
+        if request.path.startswith("/admin/"):
+            try:
+                # Try to get existing user - don't create new ones for /admin/
+                user = fixtures.models.User.objects.get(username=username)
+            except fixtures.models.User.DoesNotExist:
+                # New user going straight to /admin/ = bot
+                return HttpResponse(
+                    "Access denied. Please visit the data browser first.", status=403
+                )
+        else:
+            # Normal path: create user if needed
+            user, created = fixtures.get_or_create_admin_user(username)
+            if created:
+                user.groups.set(Group.objects.all())
+                fixtures.create_views(user)
+
         request.user = user
         return self.get_response(request)
